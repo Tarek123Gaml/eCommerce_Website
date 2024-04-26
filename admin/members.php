@@ -170,7 +170,8 @@
 
 
             } else {
-                echo "sorry you can't browse this page directly";
+                $errorMsg = "sorry you can't browse this page directly";
+                redirctHome($errorMsg);
             }
             echo "</div>";
 
@@ -299,7 +300,8 @@
 
 
             } else {
-                echo "sorry you can't browse this page directly";
+                $errorMsg = "sorry you can't browse this page directly";
+                redirctHome($errorMsg);
             }
             echo "</div>";
         } elseif ($do == 'Delete') {
