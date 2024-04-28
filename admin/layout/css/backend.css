@@ -103,9 +103,24 @@ h1 {
 
 /* start table */
 
+.main-table {
+    -webkit-box-shadow: 0 3px 10p #CCC;
+    -moz-box-shadow: 0 3px 10p #CCC;
+    box-shadow: 0 3px 10p #CCC;
+}
+
+.main-table td {
+    background-color: #FFF;
+    vertical-align: middle;
+}
+
 .main-table tr:first-child td {
     background-color: #333;
     color: #FFF;
+}
+
+.main-table .btn {
+    padding: 3px 10px;
 }
 
 /* end table */

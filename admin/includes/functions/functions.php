@@ -1,5 +1,12 @@
 <?php
 
+
+    /*
+    ** getTitle function V1.0 
+    ** echo the page tilte in case the page has variable $pageTitle 
+    ** and echo default title in other page
+    */
+
     function getTitle() {
 
         global $pageTitle; 
@@ -17,16 +24,53 @@
     }
 
 
-    /*
-    ** Home Redirect Function (this accept tow parameters)
-    ** $errorMassege = echo the error massege
+    /* 
+    ** Home Redirect FunctionV2.0 
+    ** (this accept tow parameters)
+    ** $Massege = echo the massege [error, success warning]
+    ** $url = the link you want redirect to
     ** $seconds = seconds befor redirect
     */
 
-    function redirctHome ($errorMassege, $seconds = 3) {
+    function redirctHome ($Massege, $url = NULL, $seconds = 3) {
 
-        echo "<div class='alert alert-danger'>$errorMassege</div>";
-        echo "<div class='alert alert-info'>You will redirect to the Home Page after $seconds seconds.</div>";
-        header("refresh:$seconds;url=index.php");
+        if ($url === NULL){
+            $url = 'index.php';
+            $link = "Home Page";
+        } else {
+            if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== ''){
+                $url = $_SERVER['HTTP_REFERER'];
+                $link = "Previous Page";
+            } else {
+                $url = 'index.php';
+                $link = 'Home Page';
+            }
+        }
+
+        echo $Massege ;
+        echo "<div class='alert alert-info'>You will redirect to $link after $seconds seconds.</div>";
+        header("refresh:$seconds;url=$url");
         exit();
+    }
+
+
+    /*
+    ** checkItem function V1.0 
+    ** check item in database [accept parameters]
+    ** $select : the item to select [examlpe : id , name, categories]
+    ** $from : the table to select from
+    ** $value : the value of select 
+    */
+
+    function checkItem ($select, $from, $value){
+
+        global $con;
+
+        $statement = $con->prepare("SELECT $select FROM $from WHERE $select = ?");
+
+        $statement->execute(array($value));
+
+        $count = $statement->rowCount();
+
+        return $count;
     }
