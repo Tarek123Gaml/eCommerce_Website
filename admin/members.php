@@ -47,7 +47,7 @@
                                     echo '<td>' . $row['FullName'] .'</td>';
                                     echo '<td>' . $row['Username'] .'</td>';
                                     echo '<td>' . $row['Email'] .'</td>';
-                                    echo '<td></td>';
+                                    echo '<td>' . $row['Date'] .'</td>';
                                     echo "<td>
                                         <a href='members.php?do=Edit&userid=" . $row['UserID'] . "'class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
                                         <a href='members.php?do=Delete&userid=" . $row['UserID'] . "'class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete</a>    
@@ -115,12 +115,10 @@
 
         } elseif($do == 'Insert') {
             // insert member page
-                         
-
+            echo "<div class='container'>";
+            echo "<h1 class='text-center'>Insert Member</h1>";                     
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                echo "<div class='container'>";
-                echo "<h1 class='text-center'>Insert Member</h1>";      
 
                 // get variables from the form
                 $user = $_POST['username'];
@@ -165,10 +163,10 @@
                     if ($check == 1) {
 
                         $Massege = '<div class="alert alert-danger">Sory This User Is Exist</div>';
-                        redirctHome($Massege, 'back', 10);
+                        redirctHome($Massege, 'back');
                     } else {
                         
-                        $stmt = $con->prepare("INSERT INTO users (Username, Email, FullName, Password) VALUES (?, ?, ?, ?)");
+                        $stmt = $con->prepare("INSERT INTO users (Username, Email, FullName, Password, Date) VALUES (?, ?, ?, ?, now())");
 
                         $stmt->execute(array($user, $email, $name, $hpass));
     
@@ -331,14 +329,8 @@
                 // check if the user id is numeric and git the intger value of it
                 $userid = isset($_GET['userid']) && is_numeric($_GET['userid']) ? intval($_GET['userid']) : 0;
 
-                // select all data depend on this id
-                $stmt = $con->prepare('SELECT * FROM users WHERE UserID = ? LIMIT 1');
-
-                // execute query
-                $stmt->execute(array($userid));
-
                 // the row count
-                $count = $stmt->rowCount();
+                $count = checkItem ('userid', 'users', $userid);
 
                 // if there's such id show the form
                 if ($count > 0) {
