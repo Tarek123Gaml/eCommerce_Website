@@ -115,13 +115,12 @@
 
         } elseif($do == 'Insert') {
             // insert member page
-
+                         
 
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-                echo "<h1 class='text-center'>Insert Member</h1>";
                 echo "<div class='container'>";
+                echo "<h1 class='text-center'>Insert Member</h1>";      
 
                 // get variables from the form
                 $user = $_POST['username'];
@@ -174,15 +173,19 @@
                         $stmt->execute(array($user, $email, $name, $hpass));
     
                         // echo seccess massege
-                        echo "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record inserted </div>';
+                        $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record inserted </div>';
+
+                        redirctHome($massege, 'back');
                     }
                     
                 }
 
 
             } else {
-                $errorMsg = "sorry you can't browse this page directly";
-                redirctHome($errorMsg);
+                echo '<div class="container">';
+                $errorMsg = "<div class='alert alert-danger'> sorry you can't browse this page directly </div>";
+                redirctHome($errorMsg, 'back', 3);
+                echo '</div>';
             }
             echo "</div>";
 
@@ -258,7 +261,10 @@
         
             // if there's no such id show error massege
             } else {
-                echo 'Theres No Such ID';
+                echo '<div class="container">';
+                $massege = '<div class="alert alert-danger">Theres No Such ID</div>';
+                redirctHome($massege);
+                echo '</div>';
             }
         } elseif($do == 'Update') {// Update page
 
@@ -305,14 +311,14 @@
                     $stmt->execute(array($user, $email, $name, $pass, $id));
 
                     // echo seccess massege
-                    echo "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record Updated </div>';
-                    
+                    $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record Updated </div>';
+                    redirctHome($massege);
                 }
 
 
             } else {
-                $errorMsg = "sorry you can't browse this page directly";
-                redirctHome($errorMsg);
+                $errorMsg = "<div class='alert alert-danger'>sorry you can't browse this page directly</div>";
+                redirctHome($errorMsg, 'back');
             }
             echo "</div>";
         } elseif ($do == 'Delete') {
@@ -341,11 +347,15 @@
 
                     $stmt->execute(array($userid));
 
-                    echo "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record Deleted </div>';
+                    $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record Deleted </div>';
+                    redirctHome($massege);
 
                 } else {
 
-                    echo "This ID is not exist";
+
+                    $massege = "<div class='alert alert-danger'>This ID Is Not Exist</div>";
+
+                    redirctHome($massege);
                 }
             echo "</div>";
 
