@@ -6,7 +6,7 @@
 
             // dashboard phrases
 
-            'Home'          => 'Admin',
+            'Home'          => 'Home',
             'Categories'    => 'Categories',
             'Items'         => 'Items',
             'Members'       => 'Members',

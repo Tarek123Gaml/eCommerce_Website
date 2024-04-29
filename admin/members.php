@@ -20,9 +20,15 @@
 
         // start manage page
         if ( $do == 'Manage') {// manage page 
+
+            $query = '';
+
+            if(isset($_GET['page']) && $_GET['page'] == 'Pending'){
+                $query = 'AND RegStatus = 0';
+            }
             
             // Selec all users except Admins
-            $stmt = $con->prepare("SELECT * FROM users WHERE GroupID != 1");
+            $stmt = $con->prepare("SELECT * FROM users WHERE GroupID != 1 $query");
             $stmt->execute();
 
             $rows = $stmt->fetchAll();
@@ -49,9 +55,15 @@
                                     echo '<td>' . $row['Email'] .'</td>';
                                     echo '<td>' . $row['Date'] .'</td>';
                                     echo "<td>
-                                        <a href='members.php?do=Edit&userid=" . $row['UserID'] . "'class='btn btn-success'><i class='fa fa-edit'></i> Edit</a>
-                                        <a href='members.php?do=Delete&userid=" . $row['UserID'] . "'class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete</a>    
-                                    </td>";
+                                        <a href='members.php?do=Edit&userid=" . $row['UserID'] . "'class='btn btn-success'><i class='fa fa-edit'></i> Edit </a> 
+                                        <a href='members.php?do=Delete&userid=" . $row['UserID'] . "'class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>  ";
+                                        if ($row['RegStatus'] == 0) {
+											echo "<a 
+													href='members.php?do=Activate&userid=" . $row['UserID'] . "' 
+													class='btn btn-info activate'>
+													<i class='fa fa-check'></i> Activate </a>";
+										} 
+                                    echo "</td>";
                                 echo "</tr>";
 
                             }
@@ -166,7 +178,7 @@
                         redirctHome($Massege, 'back');
                     } else {
                         
-                        $stmt = $con->prepare("INSERT INTO users (Username, Email, FullName, Password, Date) VALUES (?, ?, ?, ?, now())");
+                        $stmt = $con->prepare("INSERT INTO users (Username, Email, FullName, Password, RegStatus, Date) VALUES (?, ?, ?, ?, 1, now())");
 
                         $stmt->execute(array($user, $email, $name, $hpass));
     

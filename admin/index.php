@@ -48,4 +48,4 @@
         <input class="btn btn-primary btn-block" type="submit" value="login" />
     </form>
 
-<?php include $tpl . 'footer.php'; ?>
+<?php include $tpl . 'footer.php'; ?> 

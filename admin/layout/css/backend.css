@@ -84,6 +84,49 @@ body {
 
 /* end bootstrap edits */
 
+/* Start Dashboard Page */
+.home-stats .stat {
+    background-color: #EEE;
+    padding: 20px;
+    font-size: 16px;
+    color: #FFF;
+    border-radius: 25px;
+}
+
+.home-stats .stat a {
+    color: #FFF;
+}
+
+.home-stats .stat a:hover{
+    text-decoration: none;
+}
+.home-stats .stat span {
+    display: block;
+    font-size: 60px;
+}
+
+.home-stats .st-members{
+    background-color:#3498db;
+}
+
+.home-stats .st-pending{
+    background-color: #d35400;
+}
+
+.home-stats .st-items{
+    background-color: #16a085;
+}
+
+.home-stats .st-comments{
+    background-color: #8e44ad;
+}
+
+.latest {
+    margin-top: 30px;
+}
+
+/* End Dashboard Page */
+
 /* Start Members page */
 
 h1 {
