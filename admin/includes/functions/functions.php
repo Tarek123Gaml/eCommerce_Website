@@ -77,23 +77,39 @@
 
 
     /*
-    ** countItem function V2.0
+    ** countItem function V1.0
     ** Function to count number of items rows
     ** $item = the item to count
     ** $table = the table choose from
-    ** $where = filter for items
-    ** $value = value of filter
     */
 
-    function countItem ($item, $table, $where=NULL, $value=NULL){
+    function countItem ($item, $table){
         
         global $con;
 
-        if ($where === NULL && $value === NULL) {
-            $stmt2 = $con->prepare("SELECT COUNT($item) FROM $table");
-        } else {
-            $stmt2 = $con->prepare("SELECT COUNT($item) FROM $table WHERE $where = $value");
-        }
+        $stmt2 = $con->prepare("SELECT COUNT($item) FROM $table");
+  
         $stmt2->execute();
         return $stmt2->fetchColumn();
     }
+
+    /*
+    ** getLastest function V1.0 
+    ** function to get lastest items from database
+    ** $select = item well be selected
+    ** $table = table select from
+    ** $order = item sel
+    ** $limit
+    */
+
+    function getLastest ($select, $table, $order, $limit = 5){
+
+        global $con;
+
+        $gstmt = $con->prepare("SELECT $select FROM $table ORDER BY $order DESC LIMIT $limit");
+
+        $gstmt->execute();
+
+        return $gstmt->fetchAll();
+    }
+
