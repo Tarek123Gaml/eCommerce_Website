@@ -11,7 +11,7 @@
     <div class="collapse navbar-collapse" id="app-nav">
       <ul class="nav navbar-nav">
         <li><a href="categories.php"><?php echo lang('Categories'); ?></a></li>
-        <li><a href="#"><?php echo lang('Items'); ?></a></li>
+        <li><a href="item.php"><?php echo lang('Items'); ?></a></li>
         <li><a href="members.php"><?php echo lang('Members'); ?></a></li>
         <li><a href="#"><?php echo lang('Statistics'); ?></a></li>
         <li><a href="#"><?php echo lang('Logs'); ?></a></li>

@@ -7,11 +7,9 @@
     */
 
 
-    ob_start(); // output buferring start
+    session_start ();
 
-    session_start();
-
-    $pageTilte = 'Categories';
+    $pageTitle = 'Categories';
 
     if (isset($_SESSION['Username'])) {
 
@@ -36,10 +34,13 @@
             <div class="container categories">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Manage Categories
-                        <div class='ordering pull-right'> Ordering:  
+                        <i class="fa fa-edit"></i> Manage Categories
+                        <div class='option pull-right'><i class="fa fa-sort"></i> Ordering: [
                             <a class="<?php if($sort == 'ASC'){echo 'active';} ?>" href="?sort=ASC">  Asc </a>|
-                            <a class="<?php if($sort == 'DESC'){echo 'active';} ?>" href="?sort=DESC"> Desc</a>                            
+                            <a class="<?php if($sort == 'DESC'){echo 'active';} ?>" href="?sort=DESC"> Desc</a> ] 
+                            <i class="fa fa-eye"></i> View: [
+                            <span class='active' data-view='full'>Full </span>| 
+                            <span> Classic</span> ]
                         </div>
                     </div>
                     <div class="panel-body">
@@ -52,10 +53,12 @@
 
                                 echo "</div>";
                                 echo '<h3>' . $row['Name'] . '</h3>';
-                                echo '<p>'; if ($row['Description'] == '') {echo 'This category has no description';} else {echo $row['Description'];} echo '</p>';
-                                if ($row['Visibility'] == 1){ echo '<span class="visible">Hidden</span>';}
-                                if ($row['Allow_Comment'] == 1){ echo '<span class="comment">Comment Disabled</span>';}
-                                if ($row['Allow_Ads'] == 1){ echo '<span class="ads">Ads Disabled</span>';}
+                                echo "<div class='full-view'>";
+                                    echo '<p>'; if ($row['Description'] == '') {echo 'This category has no description';} else {echo $row['Description'];} echo '</p>';
+                                    if ($row['Visibility'] == 1){ echo '<span class="visible"><i class="fa fa-eye"></i> Hidden</span>';}
+                                    if ($row['Allow_Comment'] == 1){ echo '<span class="comment"><i class="fa fa-close"></i> Comment Disabled</span>';}
+                                    if ($row['Allow_Ads'] == 1){ echo '<span class="ads"><i class="fa fa-close"></i> Ads Disabled</span>';}
+                                echo "</div>";
                             echo '</div>';
                             echo '<hr>';
                         }
@@ -385,5 +388,3 @@
 
         exit();
     }
-
-    ob_end_flush(); // release the output

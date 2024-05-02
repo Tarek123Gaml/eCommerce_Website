@@ -191,22 +191,37 @@ h1 {
 /* end table */
 
 /* start categories page */
+.categories .panel-heading{
+    color: #959595;
+    font-weight: bold;
+}
+
+.categories .panel-heading {
+    position: relative;
+    top: 1px;
+}
 
 .categories .panel-body {
     padding: 0;
 }
 
-.categories .ordering a {
+.categories .option a {
     color: #888;
     text-decoration: none;
 }
-.categories .ordering .active {
+
+.categories .option span {
+    color: #888;
+    cursor: pointer;
+}
+
+.categories .option .active {
     color: #d20707;
 }
 
 .categories hr {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .categories .cat{
@@ -237,9 +252,16 @@ h1 {
 }
 
 .categories .cat h3 {
-    margin: 0 0 10px;
+    margin: 0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #6a6a6a;
 }
 
+.categories .cat .full-view p {
+    margin: 10px 0;
+    color: #707070;
+}
 .categories .cat:last-of-type ~ hr {
     display: none;
 }
