@@ -133,6 +133,9 @@
             echo "<h1 class='text-center'>Insert Member</h1>";                     
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                
+                echo "<div class='container'>";
+                echo "<h1 class='text-center'>Insert Member</h1>";                     
 
                 // get variables from the form
                 $user   = $_POST['username'];
@@ -196,7 +199,7 @@
             } else {
                 echo '<div class="container">';
                 $errorMsg = "<div class='alert alert-danger'> sorry you can't browse this page directly </div>";
-                redirctHome($errorMsg, 'back', 3);
+                redirctHome($errorMsg);
                 echo '</div>';
             }
             echo "</div>";

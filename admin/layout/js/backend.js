@@ -1,6 +1,10 @@
 $(function () {
     'use strict';
 
+    $("select").selectBoxIt({
+        autoWidth: false
+    });
+
     $('[placeholder]').focus(function () {
         $(this).attr('data-text', $(this).attr('placeholder'));
         $(this).attr('placeholder', '');
