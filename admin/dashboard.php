@@ -8,9 +8,16 @@
 
         include 'init.php';
 
-        $lastestUsers = 4; // number of lastest users in database
+        $numUsers = 4; // number of lastest users in database
 
-        $lastest = getLastest("*", 'users', 'UserID', $lastestUsers); // lastesr users array  
+        $latestUsers = getLastest("*", 'users', 'UserID', $numUsers); // lastesr users array  
+
+        $numItems = 4; // number of lastest items in database
+
+        $latestItems = getLastest("*", 'items', 'Item_ID', $numItems); // lastesr items array 
+        
+
+        $numComments = 4; // number of lastest comments in database
 
         /* Start Dashboard Page */
         ?>
@@ -20,26 +27,40 @@
                 <div class='row'>
                     <div class='col-md-3'>
                         <div class='stat st-members'>
-                            Total Members
-                            <span> <a href="members.php"><?php echo countItem('UserID', 'users'); ?> </a></span>
+                            <i class='fa fa-users'></i>
+                            <div class="info">
+                                Total Members
+                                <span> 
+                                    <a href="members.php"><?php echo countItem('UserID', 'users'); ?> </a>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class='col-md-3'>
                         <div class='stat st-pending'>
-                            Pending Members
-                            <span ><a href='members.php?do=Manage&page=Pending'><?php echo checkItem('RegStatus', 'users', 0); ?></a></span>
+                            <i class='fa fa-user-plus'></i>
+                            <div class="info">
+                                Pending Members
+                                <span ><a href='members.php?do=Manage&page=Pending'><?php echo checkItem('RegStatus', 'users', 0); ?></a></span>
+                            </div>  
                         </div>
                     </div>
                     <div class='col-md-3'>
                         <div class='stat st-items'>
-                            Total Items
-                            <span> <a href="items.php"><?php echo countItem('Item_ID', 'items'); ?> </a></span>
+                            <i class='fa fa-tag'></i>
+                            <div class="info">
+                                Total Items
+                                <span> <a href="items.php"><?php echo countItem('Item_ID', 'items'); ?> </a></span>
+                            </div>
                         </div>
                     </div>
                     <div class='col-md-3'>
                         <div class='stat st-comments'>
-                            Total Comments
-                            <span>1100</span>
+                            <i class='fa fa-comment'></i>
+                            <div class="info">
+                                Total Comments
+                                <span> <a href="comments.php"><?php echo countItem('commentID', 'comments'); ?> </a></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -52,12 +73,16 @@
                     <div class='col-sm-6'>
                         <div class='panel panel-default'>
                             <div class='panel-heading'>
-                                <i class='fa fa-users'></i> Latest <?php echo $lastestUsers; ?> Registered Users
+                                <i class='fa fa-users'></i> Latest <?php echo $numUsers; ?> Registered Users
+                                <span class="toggle-info pull-right">
+                                    <i class="fa fa-minus fa-lg"></i>
+                                </span>
                             </div>
                             <div class='panel-body'>
                                 <ul class="list-unstyled lastest-users">
                                 <?php
-                                    foreach ($lastest as $user) { 
+                                if (! empty($latestUsers)){
+                                    foreach ($latestUsers as $user) { 
                                         echo '<li>';
                                             echo $user['Username'];
                                             echo '<a href="members.php?do=Edit&userid=' . $user['UserID'] . '">'; 
@@ -73,6 +98,9 @@
                                             echo '</a>';
                                         echo '</li>';
                                     }
+                                } else {
+                                        echo '<div class="nice-message"> There\'s No Users To Show</div>';
+                                }
                                 ?>
                                 </ul>
                             </div>
@@ -81,10 +109,81 @@
                     <div class='col-sm-6'>
                         <div class='panel panel-default'>
                             <div class='panel-heading'>
-                                <i class='fa fa-tag'></i> Latest Items
+                                <i class='fa fa-tag'></i> Latest <?php echo $numItems; ?> Added Items
+                                <span class="toggle-info pull-right">
+                                    <i class="fa fa-minus fa-lg"></i>
+                                </span>
                             </div>
                             <div class='panel-body'>
-                                Test
+                                <ul class="list-unstyled lastest-users">
+                                    <?php
+                                    if(! empty($latestItems)){
+                                        foreach ($latestItems as $item) { 
+                                            echo '<li>';
+                                                echo $item['Name'];
+                                                echo '<a href="items.php?do=Edite&itemid=' . $item['Item_ID'] . '">'; 
+                                                    echo '<span class="btn btn-success pull-right">';
+                                                        echo '<i class="fa fa-edit"></i> Edite';
+                                                        if ($item['Approve'] == 0) {
+                                                            echo "<a 
+                                                                    href='items.php?do=Approve&itemid=" . $item['Item_ID'] . "' 
+                                                                    class='btn btn-info activate pull-right'>
+                                                                    <i class='fa fa-check'></i> Approve  </a>";
+                                                        } 
+                                                    echo '</span>'; 
+                                                echo '</a>';
+                                            echo '</li>';
+                                        }
+                                    } else {
+                                            echo '<div class="nice-message"> There\'s No Items To Show</div>';
+                                    }
+                                    ?>
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               <!-- start Latest comment -->
+                <div class='row'>
+                    <div class='col-sm-6'>
+                        <div class='panel panel-default'>
+                            <div class='panel-heading'>
+                                <i class='fa fa-comments-o'></i> Latest <?php echo $numComments; ?> Comments
+                                <span class="toggle-info pull-right">
+                                    <i class="fa fa-minus fa-lg"></i>
+                                </span>
+                            </div>
+                            <div class='panel-body'>
+                            <?php
+                                // Selec all comments
+                                $stmt = $con->prepare(" SELECT 
+                                                                comments.* , users.Username
+                                                        FROM
+                                                                comments
+                                                        INNER JOIN
+                                                                users
+                                                        ON
+                                                                users.UserID = comments.userID
+                                                        ORDER BY
+                                                                commentID DESC
+                                                        LIMIT 
+                                                                $numComments");
+                                $stmt->execute();
+                                $rows = $stmt->fetchAll();
+                                if (! empty ($rows)){
+                                    foreach ($rows as $row){
+                                        echo '<div class="comment-box">';
+                                            echo '<span class="member-n">
+                                                        <a href="members.php?do=Edit&userid=' . $row['userID'] . '">
+                                                            ' . $row['Username'] . '</a></span>';
+                                            echo '<p class="member-c">' . $row['Comment'] . '</p>'; 
+                                        echo '</div>';
+                                    }
+                                } else {
+                                        echo '<div class="nice-message"> There\'s No Comments To Show</div>';
+                                }
+                            ?>
                             </div>
                         </div>
                     </div>

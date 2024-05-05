@@ -28,46 +28,55 @@
 
             $stmt3 = $con->prepare("SELECT * FROM categories ORDER BY Ordering $sort");
             $stmt3->execute();
-            $rows = $stmt3->fetchAll(); ?>
+            $rows = $stmt3->fetchAll();
+            
+            if (! empty($rows)){
+                ?>
+                <h1 class="text-center">Manage Categories</h1>
+                <div class="container categories">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-edit"></i> Manage Categories
+                            <div class='option pull-right'><i class="fa fa-sort"></i> Ordering: [
+                                <a class="<?php if($sort == 'ASC'){echo 'active';} ?>" href="?sort=ASC">  Asc </a>|
+                                <a class="<?php if($sort == 'DESC'){echo 'active';} ?>" href="?sort=DESC"> Desc</a> ] 
+                                <i class="fa fa-eye"></i> View: [
+                                <span class='active' data-view='full'>Full </span>| 
+                                <span> Classic</span> ]
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <?php
+                            foreach($rows as $row){
+                                echo "<div class='cat'>";
+                                    echo"<div class='hidden-buttons'>";
+                                        echo "<a href='categories.php?do=Edit&catid=". $row['ID'] ."' class='btn btn-xs btn-primary'><i class='fa fa-edit'></i> Edit</a>";
+                                        echo '<a href="categories.php?do=Delete&catid=' . $row['ID'] . '" class="confirm btn btn-xs btn-danger"><i class="fa fa-close"></i> Delete</a>';
 
-            <h1 class="text-center">Manage Categories</h1>
-            <div class="container categories">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-edit"></i> Manage Categories
-                        <div class='option pull-right'><i class="fa fa-sort"></i> Ordering: [
-                            <a class="<?php if($sort == 'ASC'){echo 'active';} ?>" href="?sort=ASC">  Asc </a>|
-                            <a class="<?php if($sort == 'DESC'){echo 'active';} ?>" href="?sort=DESC"> Desc</a> ] 
-                            <i class="fa fa-eye"></i> View: [
-                            <span class='active' data-view='full'>Full </span>| 
-                            <span> Classic</span> ]
+                                    echo "</div>";
+                                    echo '<h3>' . $row['Name'] . '</h3>';
+                                    echo "<div class='full-view'>";
+                                        echo '<p>'; if ($row['Description'] == '') {echo 'This category has no description';} else {echo $row['Description'];} echo '</p>';
+                                        if ($row['Visibility'] == 1){ echo '<span class="visible"><i class="fa fa-eye"></i> Hidden</span>';}
+                                        if ($row['Allow_Comment'] == 1){ echo '<span class="comment"><i class="fa fa-close"></i> Comment Disabled</span>';}
+                                        if ($row['Allow_Ads'] == 1){ echo '<span class="ads"><i class="fa fa-close"></i> Ads Disabled</span>';}
+                                    echo "</div>";
+                                echo '</div>';
+                                echo '<hr>';
+                            }
+                            ?>
                         </div>
                     </div>
-                    <div class="panel-body">
-                        <?php
-                        foreach($rows as $row){
-                            echo "<div class='cat'>";
-                                echo"<div class='hidden-buttons'>";
-                                    echo "<a href='categories.php?do=Edit&catid=". $row['ID'] ."' class='btn btn-xs btn-primary'><i class='fa fa-edit'></i> Edit</a>";
-                                    echo '<a href="categories.php?do=Delete&catid=' . $row['ID'] . '" class="confirm btn btn-xs btn-danger"><i class="fa fa-close"></i> Delete</a>';
-
-                                echo "</div>";
-                                echo '<h3>' . $row['Name'] . '</h3>';
-                                echo "<div class='full-view'>";
-                                    echo '<p>'; if ($row['Description'] == '') {echo 'This category has no description';} else {echo $row['Description'];} echo '</p>';
-                                    if ($row['Visibility'] == 1){ echo '<span class="visible"><i class="fa fa-eye"></i> Hidden</span>';}
-                                    if ($row['Allow_Comment'] == 1){ echo '<span class="comment"><i class="fa fa-close"></i> Comment Disabled</span>';}
-                                    if ($row['Allow_Ads'] == 1){ echo '<span class="ads"><i class="fa fa-close"></i> Ads Disabled</span>';}
-                                echo "</div>";
-                            echo '</div>';
-                            echo '<hr>';
-                        }
-                        ?>
-                    </div>
+                    <a href="categories.php?do=Add" class="add-category btn btn-primary"><i class='fa fa-plus'></i> Add New Category</a>
                 </div>
-                <a href="categories.php?do=Add" class="add-category btn btn-primary"><i class='fa fa-plus'></i> Add New Category</a>
-            </div>
-            <?php
+                <?php
+            } else{
+                echo'<div class="container">';
+                    echo '<div class="nice-message"> There\'s No Categories To Show</div>';
+                    echo '<a href="categories.php?do=Add" class="add-category btn btn-primary"><i class="fa fa-plus"></i> Add New Category</a>';
+
+                echo '</div>';
+            }
         } elseif ($do == 'Add') { // Add Page?>
 
             <h1 class='text-center'>Add New Category</h1>

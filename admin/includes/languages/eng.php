@@ -10,6 +10,7 @@
             'Categories'    => 'Categories',
             'Items'         => 'Items',
             'Members'       => 'Members',
+            'Comments'      => 'Comments',
             'Statistics'    => 'Statistics',
             'Logs'          => 'Logs'
         );

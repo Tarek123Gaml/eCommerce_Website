@@ -1,6 +1,23 @@
 $(function () {
     'use strict';
 
+    // dashboard
+
+    $('.toggle-info').click(function(){
+
+        $(this).toggleClass('selected').parent().next('.panel-body').fadeToggle(200);
+        
+        if ($(this).hasClass('selected')) {
+
+            $(this).html('<i class="fa fa-plus fa-lg"></i>');
+
+        } else {
+
+            $(this).html('<i class="fa fa-minus fa-lg"></i>');
+
+        }
+    });
+
     $("select").selectBoxIt({
         autoWidth: false
     });

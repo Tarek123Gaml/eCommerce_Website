@@ -28,51 +28,59 @@
             }
             
             // Selec all users except Admins
-            $stmt = $con->prepare("SELECT * FROM users WHERE GroupID != 1 $query");
+            $stmt = $con->prepare("SELECT * FROM users WHERE GroupID != 1 $query ORDER BY UserID DESC");
             $stmt->execute();
 
             $rows = $stmt->fetchAll();
-        ?>
-            <h1 class='text-center'>Manage Members</h1>
-            <div class='container'>
-                <div class='table-responsive'>
-                    <table class='main-table text-center table table-bordered'>
-                        <tr>
-                            <td>#ID</td>
-                            <td>Full Name</td>
-                            <td>Username</td>
-                            <td>Email</td>
-                            <td>Rigesterd Date</td>
-                            <td>Control</td>
-                        </tr>
-                        <?php
-                            foreach ($rows as $row){
 
-                                echo "<tr>";
-                                    echo '<td>' . $row['UserID'] .'</td>';
-                                    echo '<td>' . $row['FullName'] .'</td>';
-                                    echo '<td>' . $row['Username'] .'</td>';
-                                    echo '<td>' . $row['Email'] .'</td>';
-                                    echo '<td>' . $row['Date'] .'</td>';
-                                    echo "<td>
-                                        <a href='members.php?do=Edit&userid=" . $row['UserID'] . "'class='btn btn-success'><i class='fa fa-edit'></i> Edit </a> 
-                                        <a href='members.php?do=Delete&userid=" . $row['UserID'] . "'class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>  ";
-                                        if ($row['RegStatus'] == 0) {
-											echo "<a 
-													href='members.php?do=Activate&userid=" . $row['UserID'] . "' 
-													class='btn btn-info activate'>
-													<i class='fa fa-check'></i> Activate </a>";
-										} 
-                                    echo "</td>";
-                                echo "</tr>";
+            if (! empty($rows)){
+                ?>
+                <h1 class='text-center'>Manage Members</h1>
+                <div class='container'>
+                    <div class='table-responsive'>
+                        <table class='main-table text-center table table-bordered'>
+                            <tr>
+                                <td>#ID</td>
+                                <td>Full Name</td>
+                                <td>Username</td>
+                                <td>Email</td>
+                                <td>Rigesterd Date</td>
+                                <td>Control</td>
+                            </tr>
+                            <?php
+                                foreach ($rows as $row){
 
-                            }
-                        ?>
-                    </table>
+                                    echo "<tr>";
+                                        echo '<td>' . $row['UserID'] .'</td>';
+                                        echo '<td>' . $row['FullName'] .'</td>';
+                                        echo '<td>' . $row['Username'] .'</td>';
+                                        echo '<td>' . $row['Email'] .'</td>';
+                                        echo '<td>' . $row['Date'] .'</td>';
+                                        echo "<td>
+                                            <a href='members.php?do=Edit&userid=" . $row['UserID'] . "'class='btn btn-success'><i class='fa fa-edit'></i> Edit </a> 
+                                            <a href='members.php?do=Delete&userid=" . $row['UserID'] . "'class='btn btn-danger confirm'><i class='fa fa-close'></i> Delete </a>  ";
+                                            if ($row['RegStatus'] == 0) {
+                                                echo "<a 
+                                                        href='members.php?do=Activate&userid=" . $row['UserID'] . "' 
+                                                        class='btn btn-info activate'>
+                                                        <i class='fa fa-check'></i> Activate </a>";
+                                            } 
+                                        echo "</td>";
+                                    echo "</tr>";
+
+                                }
+                            ?>
+                        </table>
+                    </div>
+                    <a href="members.php?do=Add" class='btn btn-primary'><i class='fa fa-plus'></i> New Member</a>
                 </div>
-                <a href="members.php?do=Add" class='btn btn-primary'><i class='fa fa-plus'></i> New Member</a>
-            </div>
-<?php
+                <?php
+            } else{
+                echo'<div class="container">';
+                    echo '<div class="nice-message"> There\'s No Members To Show</div>';
+                    echo '<a href="members.php?do=Add" class="btn btn-primary"><i class="fa fa-plus"></i> New Member</a>';
+                echo '</div>';
+            }
         } elseif ($do== 'Add') {?>
 
                     <h1 class='text-center'>Add New Member</h1>
@@ -320,14 +328,23 @@
 
                 if (empty($FormErrors)){
 
-                    // update the database with the info
-                    
-                    $stmt = $con->prepare("UPDATE users SET Username = ?, Email = ?, FullName = ?, Password = ? WHERE UserID = ?");
-                    $stmt->execute(array($user, $email, $name, $pass, $id));
+                    // check if the user not exist befor update
+                    $stmt2 = $con->prepare("SELECT * FROM users WHERE Username = ? AND UserID != ?");
+                    $stmt2->execute(array($user, $id));
+                    $count2 = $stmt2->rowCount();
 
-                    // echo seccess massege
-                    $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record Updated </div>';
-                    redirctHome($massege);
+                    if ($count2 == 0) {
+
+                        // update the database with the info
+                        $stmt = $con->prepare("UPDATE users SET Username = ?, Email = ?, FullName = ?, Password = ? WHERE UserID = ?");
+                        $stmt->execute(array($user, $email, $name, $pass, $id));
+
+                        // echo seccess massege
+                        $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record Updated </div>';
+                        redirctHome($massege);
+                    } else {
+                        echo '<div class="alert alert-danger">Sorry This User Is Exist</div>';
+                    }
                 }
 
 
@@ -357,7 +374,7 @@
                     $stmt->execute(array($userid));
 
                     $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record Deleted </div>';
-                    redirctHome($massege);
+                    redirctHome($massege, 'back');
 
                 } else {
 
