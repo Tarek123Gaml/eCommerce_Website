@@ -88,7 +88,7 @@
             } else{
                 echo'<div class="container">';
                     echo '<div class="nice-message"> There\'s No Items To Show</div>';
-                    echo '<a href="items.php?do=Add" class="btn btn-sm btn-primary"> New Item</a>';
+                    echo '<a href="items.php?do=Add" class="btn  btn-primary"><i class="fa fa-plus"></i> New Item</a>';
                 echo '</div>';
             }
 

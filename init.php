@@ -1,6 +1,6 @@
 <?php 
 
-    include 'connect.php';
+    include 'admin/connect.php';
 
     // routs
     $tpl = 'includes/templates/'; // templat directory
@@ -15,7 +15,3 @@
     include $func . 'functions.php';
     include $lang . 'eng.php';
     include $tpl . 'header.php';
-
-    // include navbar in all pages expect on with var noNavbar
-
-    if ( !isset ($noNavbar)) {include $tpl . 'navbar.php';}
