@@ -33,7 +33,9 @@
                                     INNER JOIN
                                             users
                                     ON
-                                            users.UserID = comments.userID");
+                                            users.UserID = comments.userID
+                                    ORDER BY
+                                            commentID DESC");
             $stmt->execute();
 
             $rows = $stmt->fetchAll();
