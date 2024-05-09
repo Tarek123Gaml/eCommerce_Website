@@ -6,11 +6,11 @@
     ** function to get  All Records from database
     */
 
-    function getAll ($all, $order){
+    function getAll ($all, $order, $where = NULL){
 
       global $con;
 
-      $getAlll = $con->prepare("SELECT * FROM $all ORDER BY $order DESC");
+      $getAlll = $con->prepare("SELECT * FROM $all $where ORDER BY $order DESC");
 
       $getAlll->execute();
 
