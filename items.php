@@ -50,24 +50,37 @@
             <p><?php echo $item['Description'] ?></p>
             <ul class="list-unstyled">
                 <li>
-                    <i class="fa fa-calendar a-fw"></i>
+                    <i class="fa fa-calendar fa-fw"></i>
                     <span>Added Date: </span><?php echo $item['Add_Date'] ?>
                 </li>
                 <li>
-                    <i class="fa fa-money a-fw"></i>
+                    <i class="fa fa-money fa-fw"></i>
                     <span>Price:</span> $<?php echo $item['Price'] ?>
                 </li>
                 <li>
-                    <i class="fa fa-globe a-fw"></i>
+                    <i class="fa fa-globe fa-fw"></i>
                     <span>Made In:</span> <?php echo $item['Country_Made'] ?>
                 </li>
                 <li>
-                    <i class="fa fa-tags a-fw"></i>
+                    <i class="fa fa-tags fa-fw"></i>
                     <span>Category:</span> <a href="categories.php?pageid=<?php echo $item['Cat_ID'] ?>"><?php echo $item['Cat_Name'] ?></a>
                 </li>
                 <li>
-                    <i class="fa fa-user a-fw"></i>
+                    <i class="fa fa-user fa-fw"></i>
                     <span>Added By:</span> <a href="#"> <?php echo $item['Username'] ?></a>
+                </li>
+                <li class="item-tag">
+                    <i class="fa fa-tags fa-fw"></i>
+                    <span>Tags :</span>
+                    <?php 
+                        $allTags = explode(',', $item['Tags']);
+                        foreach ($allTags as $tag){
+                            $tag = str_replace(' ', '', $tag);
+                            if(!empty($tag)){
+                                echo '<a href="tags.php?name=' . strtolower($tag) . '">' . $tag . '</a>';
+                            }
+                        }
+                    ?>
                 </li>
             </ul>
         </div>

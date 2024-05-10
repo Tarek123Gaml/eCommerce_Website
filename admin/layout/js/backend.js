@@ -18,9 +18,11 @@ $(function () {
         }
     });
 
+
     $("select").selectBoxIt({
         autoWidth: false
     });
+
 
     $('[placeholder]').focus(function () {
         $(this).attr('data-text', $(this).attr('placeholder'));
@@ -66,4 +68,16 @@ $(function () {
             $('.cat .full-view').fadeOut(200);
         }
     });
+
+    $('.child-link').hover(function() {
+
+        $(this).find('.show-delete').fadeIn(200);
+
+    }, function () {
+
+        $(this).find('.show-delete').fadeOut(200);
+
+    });
+
+
 });

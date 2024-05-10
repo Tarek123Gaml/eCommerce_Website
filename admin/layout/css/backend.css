@@ -234,6 +234,13 @@ h1 {
 
 /* start table */
 
+
+.manage-members img {
+    width: 50px;
+    height: 50px;
+}
+
+
 .main-table {
     -webkit-box-shadow: 0 3px 10p #CCC;
     -moz-box-shadow: 0 3px 10p #CCC;
@@ -360,5 +367,31 @@ h1 {
     margin-top: -10px;
     margin-bottom: 30px;
   }
+
+  .categories .child-head {
+    margin: 15px 0 10px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #065f74
+}
+
+.categories .child-cat {
+    margin: 0;
+}
+
+
+.categories .child-cat li {
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.categories .child-cat li:before {
+    content: '- ';
+}
+
+.categories .show-delete {
+    color: #f00;
+    display: none;
+}
 
 /* end categories page */

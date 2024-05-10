@@ -38,9 +38,10 @@
                 <h1 class='text-center'>Manage Members</h1>
                 <div class='container'>
                     <div class='table-responsive'>
-                        <table class='main-table text-center table table-bordered'>
+                        <table class='main-table manage-members text-center table table-bordered'>
                             <tr>
                                 <td>#ID</td>
+                                <td>Avatar</td>
                                 <td>Full Name</td>
                                 <td>Username</td>
                                 <td>Email</td>
@@ -52,6 +53,13 @@
 
                                     echo "<tr>";
                                         echo '<td>' . $row['UserID'] .'</td>';
+                                        echo '<td>';
+                                        if(! empty($row['Avatar'])){
+                                            echo'<img class="img-thumbnail img-circle" src="uploads/avatars/' . $row['Avatar'] . '">';
+                                        } else {
+                                            echo '<img class="img-thumbnail img-circle" src="../img.png" alt="">';
+                                        }
+                                        echo'</td>';
                                         echo '<td>' . $row['FullName'] .'</td>';
                                         echo '<td>' . $row['Username'] .'</td>';
                                         echo '<td>' . $row['Email'] .'</td>';
@@ -86,7 +94,7 @@
                     <h1 class='text-center'>Add New Member</h1>
 
                     <div class='container'>
-                        <form class='form-horizontal' action='?do=Insert' method='POST'>
+                        <form class='form-horizontal' action='?do=Insert' method='POST' enctype="multipart/form-data">
                             <!-- start username field -->
                             <div class='form-group form-group-lg'>
                                 <label class='col-sm-2 control-label'>Username</label>
@@ -124,6 +132,14 @@
                                 </div>
                             </div>
                             <!-- end Full Name field -->
+                            <!-- start  Avatar field -->
+                            <div class='form-group form-group-lg'>
+                                <label class='col-sm-2 control-label'>User Avatar</label>
+                                <div class='col-sm-10 col-md-4'>
+                                    <input type="file" name='avatar' class='form-control' >
+                                </div>
+                            </div>
+                            <!-- end Avatar field -->
                             <!-- start submit field -->
                             <div class='form-group'>
                                 <div class='col-sm-offset-2 col-sm-10'>
@@ -143,7 +159,19 @@
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 echo "<div class='container'>";
-                echo "<h1 class='text-center'>Insert Member</h1>";                     
+                echo "<h1 class='text-center'>Insert Member</h1>"; 
+                
+                // upload variable
+                $avatarName         = $_FILES['avatar']['name'];
+                $avatarSize         = $_FILES['avatar']['size'];
+                $avatarTmp          = $_FILES['avatar']['tmp_name'];
+                $avatarType         = $_FILES['avatar']['type'];
+                $avatarParts = explode('.', $avatarName);
+                $avatarExtension = strtolower(end($avatarParts));
+
+
+                // allow avatar types
+                $allowExtensions = array('jpeg', 'jpg', 'png', 'gif');
 
                 // get variables from the form
                 $user   = $_POST['username'];
@@ -170,6 +198,12 @@
                 if (empty($pass)) {
                     $FormErrors[] = "password con't be empty";
                 }
+                if (! empty($avatarName) && ! in_array($avatarExtension, $allowExtensions)){
+                    $FormErrors[] = "This EXtension Isn't Allowed";
+                }
+                if ($avatarSize > 4194304){
+                    $FormErrors = 'Avatar Can\'t Be Larger Than 4MB';
+                }
 
                 foreach ($FormErrors as $error) {
                     echo '<div class="alert alert-danger">' . $error . '</div>';
@@ -178,6 +212,10 @@
                 // proceed the insert operation if there's no any errors
 
                 if (empty($FormErrors)){
+
+                    $avatar = rand(0, 10000000000) . '_' . $avatarName ;
+
+                    move_uploaded_file($avatarTmp, 'uploads\avatars\\' . $avatar);
 
                     // insert the database with the info
 
@@ -191,9 +229,9 @@
                         redirctHome($Massege, 'back');
                     } else {
                         
-                        $stmt = $con->prepare("INSERT INTO users (Username, Email, FullName, Password, RegStatus, Date) VALUES (?, ?, ?, ?, 1, now())");
+                        $stmt = $con->prepare("INSERT INTO users (Username, Email, FullName, Password, RegStatus, Date, Avatar) VALUES (?, ?, ?, ?, 1, now(), ?)");
 
-                        $stmt->execute(array($user, $email, $name, $hpass));
+                        $stmt->execute(array($user, $email, $name, $hpass, $avatar));
     
                         // echo seccess massege
                         $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Record inserted </div>';

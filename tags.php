@@ -1,14 +1,18 @@
 <?php
 
-    session_start();
-    $pageTitle = "HomePage";
+session_start();
+$pageTitle = "Show Tags";
 
-    include 'init.php';
+include 'init.php';
+
 ?>
 <div class="container">
+    <?php $tag = $_GET['name']; ?> 
+    <h1 class="text-center">Tag : <?php echo $tag ?></h1>
     <div class="rwo">
     <?php 
-        foreach( getAll('*', 'items', 'WHERE Approve = 1', 'Item_ID') as $item){?>
+        $tags = getAll('*', 'items', "WHERE tags like '%$tag%' AND Approve = 1", 'Item_ID');
+        foreach( $tags as $item){?>
             <div class="col-sm-6 col-md-3">
                 <div class="thumbnail item-box">
                     <span class="price-tag">$<?php echo $item['Price'] ?></span>
@@ -23,6 +27,5 @@
         <?php } ?>
     </div>
 </div>
-<?php
-    include $tpl . 'footer.php';
-?> 
+
+<?php include $tpl . 'footer.php'; ?> 

@@ -1,10 +1,16 @@
-<?php include 'init.php'; ?>
+<?php
 
+session_start();
+$pageTitle = "Show Category";
+
+include 'init.php';
+
+?>
 <div class="container">
-    <h1 class="text-center">Show Category</h1>
+    <h1 class="text-center">Show Category Items</h1>
     <div class="rwo">
     <?php 
-        foreach( getItem('Cat_ID', $_GET['pageid'])as $item){?>
+        foreach( getAll('*', 'items', 'WHERE Approve = 1 AND Cat_ID = ' . $_GET['pageid'], 'Item_ID')as $item){?>
             <div class="col-sm-6 col-md-3">
                 <div class="thumbnail item-box">
                     <span class="price-tag">$<?php echo $item['Price'] ?></span>

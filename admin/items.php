@@ -155,9 +155,7 @@
                             <select name="member" >
                                 <option value="0">...</option>
                                 <?php
-                                    $stmt = $con->prepare("SELECT * FROM users");
-                                    $stmt->execute();
-                                    $members = $stmt->fetchAll();
+                                    $members = getAll ('*', 'users', '', 'userID');
                                     foreach($members as $member){
                                         echo '<option value="' . $member['UserID'] . '">' . $member['Username'] . '</option>';
                                     }
@@ -173,17 +171,28 @@
                             <select name="category">
                                 <option value="0">...</option>
                                 <?php
-                                    $stmt = $con->prepare("SELECT * FROM categories");
-                                    $stmt->execute();
-                                    $category = $stmt->fetchAll();
+                                    $category = getAll('*', 'categories', 'WHERE parent = 0', 'ID');
                                     foreach($category as $cat){
                                         echo '<option value="' . $cat['ID'] . '">' . $cat['Name'] . '</option>';
+                                        $child = getAll('*', 'categories', 'WHERE parent =' . $cat['ID'], 'ID');
+                                        foreach($child as $c){
+                                            echo '<option value="' . $c['ID'] . '"> --- ' . $cat['Name'] . '/' . $c['Name'] . '</option>';
+                                        }
                                     }
                                 ?>
                             </select>
                         </div>
                     </div>
-                    <!-- end category field -->
+                    <!-- end category field -->                    
+                    <!-- start Tags field -->
+                    <div class='form-group form-group-lg'>
+                        <label class='col-sm-2 control-label'>Tags</label>
+                        <div class='col-sm-10 col-md-4'>
+                            <input type="text" name="tags" class="form-control"
+                            placeholder="Separate Tags With Comma (,)" >
+                        </div>
+                    </div>
+                    <!-- end Tags field -->
                     <!-- start submit field -->
                     <div class='form-group'>
                         <div class='col-sm-offset-2 col-sm-10'>
@@ -209,6 +218,7 @@
                 $status         = $_POST['status'];
                 $member         = $_POST['member'];
                 $category       = $_POST['category'];
+                $tags           = $_POST['tags'];
 
                 // validate errors
                 $FormErrors = array();
@@ -247,10 +257,10 @@
                 if (empty($FormErrors)){
 
                         
-                        $stmt = $con->prepare("INSERT INTO items (Name, Description, Price, Status, Country_Made, Cat_ID, Member_ID, Add_Date)
-                                                            VALUES (?, ?, ?, ?, ?, ?, ?, now())");
+                        $stmt = $con->prepare("INSERT INTO items (Name, Description, Price, Status, Country_Made, Cat_ID, Member_ID, Tags, Add_Date)
+                                                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, now())");
 
-                        $stmt->execute(array($name, $description, $price, $status, $country, $category, $member));
+                        $stmt->execute(array($name, $description, $price, $status, $country, $category, $member, $tags));
     
                         // echo seccess massege
                         $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Item inserted </div>';
@@ -383,6 +393,15 @@
                             </div>
                         </div>
                         <!-- end category field -->
+                        <!-- start Tags field -->
+                        <div class='form-group form-group-lg'>
+                            <label class='col-sm-2 control-label'>Tags</label>
+                            <div class='col-sm-10 col-md-4'>
+                                <input type="text" name="tags" class="form-control" value="<?php echo $row['Tags']?>"
+                                  placeholder="Separate Tags With Comma (,)" >
+                            </div>
+                        </div>
+                        <!-- end Tags field -->
                         <!-- start submit field -->
                         <div class='form-group'>
                             <div class='col-sm-offset-2 col-sm-10'>
@@ -471,6 +490,7 @@
                 $status         = $_POST['status'];
                 $member         = $_POST['member'];
                 $category       = $_POST['category'];
+                $tags           = $_POST['tags'];
 
                 // validate errors
                 $FormErrors = array();
@@ -510,8 +530,8 @@
 
                     // update the database with the info
                     
-                    $stmt = $con->prepare("UPDATE items SET Name = ?, Description = ?, Price = ?, Country_Made = ?, Status = ?, Cat_ID = ?, Member_ID = ? WHERE Item_ID = ?");
-                    $stmt->execute(array($name, $description, $price, $country, $status, $category, $member, $itemid));
+                    $stmt = $con->prepare("UPDATE items SET Name = ?, Description = ?, Price = ?, Country_Made = ?, Status = ?, Cat_ID = ?, Member_ID = ? ,Tags = ? WHERE Item_ID = ?");
+                    $stmt->execute(array($name, $description, $price, $country, $status, $category, $member, $tags, $itemid));
 
                     // echo seccess massege
                     $massege = "<div class='alert alert-success'>" . $stmt->rowCount() . ' Item Updated </div>';

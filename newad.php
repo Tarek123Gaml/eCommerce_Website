@@ -17,6 +17,7 @@
         $country        = htmlspecialchars(strip_tags($_POST['country']));
         $status         = filter_var($_POST['status'], FILTER_SANITIZE_NUMBER_INT);
         $category       = filter_var($_POST['category'], FILTER_SANITIZE_NUMBER_INT);
+        $tags           = htmlspecialchars(strip_tags($_POST['tags']));
 
         // validate errors
         $FormErrors = array();
@@ -49,10 +50,10 @@
         if (empty($FormErrors)){
 
                 
-                $stmt = $con->prepare("INSERT INTO items (Name, Description, Price, Status, Country_Made, Cat_ID, Member_ID, Add_Date)
-                                                    VALUES (?, ?, ?, ?, ?, ?, ?, now())");
+                $stmt = $con->prepare("INSERT INTO items (Name, Description, Price, Status, Country_Made, Cat_ID, Tags, Member_ID, Add_Date)
+                                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, now())");
 
-                $stmt->execute(array($name, $description, $price, $status, $country, $category, $_SESSION['uid']));
+                $stmt->execute(array($name, $description, $price, $status, $country, $category, $tags, $_SESSION['uid']));
 
                 if($stmt){
                 // echo seccess massege
@@ -135,15 +136,28 @@
                                         <select name="category" required>
                                             <option value="">...</option>
                                             <?php
-                                                $category = getAll('categories', 'ID');
+                                                $category = getAll('*', 'categories', 'WHERE parent = 0', 'ID', 'DESC');
                                                 foreach($category as $cat){
                                                     echo '<option value="' . $cat['ID'] . '">' . $cat['Name'] . '</option>';
+                                                    $childs = getAll('*', 'categories', 'WHERE parent =' . $cat['ID'], 'ID', 'DESC');
+                                                        foreach($childs as $c){
+                                                            echo '<option value="' . $c['ID'] . '">--- ' . $cat['Name'] . '/' . $c['Name'] . '</option>';
+                                                        }
                                                 }
                                             ?>
                                         </select>
                                     </div>
                                 </div>
                                 <!-- end category field -->
+                                <!-- start Tags field -->
+                                <div class='form-group form-group-lg'>
+                                    <label class='col-sm-3 control-label'>Tags</label>
+                                    <div class='col-sm-10 col-md-9'>
+                                        <input type="text" name="tags" class="form-control"
+                                        placeholder="Separate Tags With Comma (,)">
+                                    </div>
+                                </div>
+                                <!-- end Tags field -->
                                 <!-- start submit field -->
                                 <div class='form-group'>
                                     <div class='col-sm-offset-3 col-sm-9'>

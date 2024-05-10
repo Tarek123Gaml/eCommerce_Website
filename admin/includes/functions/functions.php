@@ -2,6 +2,24 @@
 
 
     /*
+    ** getAll function V1.0 
+    ** function to get  All Records from database
+    */
+
+    function getAll ($faild, $table, $where, $orderfield, $ordering = 'DESC'){
+
+        global $con;
+  
+        $getAlll = $con->prepare("SELECT $faild FROM $table $where ORDER BY $orderfield $ordering");
+  
+        $getAlll->execute();
+  
+        return $getAlll->fetchAll();
+    }
+
+
+
+    /*
     ** getTitle function V1.0 
     ** echo the page tilte in case the page has variable $pageTitle 
     ** and echo default title in other page

@@ -244,6 +244,15 @@ h1 {
     width: 120px;
 }
 
+.item-tag a {
+    display: inline-block;
+    background: #e2e2e2;
+    padding: 2px 10px;
+    border-radius: 5px;
+    color: #666;
+    margin-right: 5px;
+}
+
 .add-comment h3 {
     margin: 0 0 10px;
 }

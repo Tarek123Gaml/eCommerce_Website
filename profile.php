@@ -55,9 +55,11 @@
             <div class="panel-body">
                 <div class="rwo">
                     <?php
-                    if(! empty(getItem('Member_ID', $info['UserID'], 1))){
+                    $items = getAll('*', 'items', ' WHERE Member_ID ='. $info['UserID'], 'Item_ID');
+
+                    if(! empty($items)){
                         echo '<div class="row">';
-                        foreach( getItem('Member_ID', $info['UserID'], 1) as $item){?>
+                        foreach( $items as $item){?>
                             <div class="col-sm-6 col-md-3">
                                 <div class="thumbnail item-box">
                                     <?php 
@@ -91,11 +93,8 @@
             <div class="panel-heading">Latest Comments</div>
             <div class="panel-body">
                 <?php
-                $getComment = $con->prepare('SELECT Comment FROM comments WHERE userID = ?');
 
-                $getComment->execute(array($info['UserID']));
-
-                $comments = $getComment->fetchAll();
+                $comments = cgetAll ('Comment', 'comments', 'WHERE userID = ?', commentID);
 
                 if(! empty($comments)) {
                     foreach($comments as $comment){
